@@ -12,6 +12,7 @@ export default class App extends React.Component {
       isEditProfilePopupOpen: false,
       isAddPlacePopupOpen: false,
       isEditAvatarPopupOpen: false,
+      selectedCard: '',
     }
   }
 
@@ -27,11 +28,16 @@ export default class App extends React.Component {
     this.setState({isAddPlacePopupOpen: true});
   }
 
+  handleCardClick = (card) => {
+    this.setState({selectedCard: card});
+  }
+
   closeAllPopups = () => {
     this.setState({
       isEditProfilePopupOpen: false,
       isAddPlacePopupOpen: false,
       isEditAvatarPopupOpen: false,
+      selectedCard: false,
     })
   }
 
@@ -40,7 +46,12 @@ export default class App extends React.Component {
     <>
       <Header />
 
-      <Main onEditProfile={this.handleEditProfileClick} onAddPlace={this.handleAddPlaceClick} onEditAvatar={this.handleEditAvatarClick}/>
+      <Main 
+        onEditProfile={this.handleEditProfileClick}
+        onAddPlace={this.handleAddPlaceClick}
+        onEditAvatar={this.handleEditAvatarClick}
+        onCardClick={this.handleCardClick}
+      />
       
       <Footer />
 
@@ -88,7 +99,7 @@ export default class App extends React.Component {
         </form>
       </PopupWithForm>
 
-      <ImagePopup />
+      <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups} />
     </>)
   }
 }
