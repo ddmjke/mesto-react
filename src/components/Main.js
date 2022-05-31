@@ -2,6 +2,7 @@ import React from 'react';
 import userpic from '../images/userpic.jpg';
 import mestoApi from '../utils/Api';
 import Card from './Card';
+
 export default class Main extends React.Component {
   constructor(props) {
     super(props);

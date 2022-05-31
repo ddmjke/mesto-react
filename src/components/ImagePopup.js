@@ -1,6 +1,6 @@
 import EscapeListener from "./EscapeListener";
 
-function ImagePopup(props) {
+export default function ImagePopup(props) {
   return (
     props.card &&
     <div className="pop-up pop-up_active pop-up_type_photo" onClick={props.onClose}>
@@ -13,5 +13,3 @@ function ImagePopup(props) {
     </div>
   )
 }
-
-export default ImagePopup;
