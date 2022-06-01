@@ -5,7 +5,7 @@ export default function Card(props) {
 
   return (
     <div className="photo-grid__card">
-      <img className="photo-grid__photo" src={props.card.link} alt="" onClick={handleClick} />
+      <img className="photo-grid__photo" src={props.card.link} alt={props.card.name} onClick={handleClick} />
       <button className="photo-grid__remove-button" type="button"></button>
       <div className="photo-grid__caption">
         <h2 className="photo-grid__textbox">{props.card.name}</h2>

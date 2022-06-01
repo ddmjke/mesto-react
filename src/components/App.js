@@ -12,7 +12,8 @@ export default class App extends React.Component {
       isEditProfilePopupOpen: false,
       isAddPlacePopupOpen: false,
       isEditAvatarPopupOpen: false,
-      selectedCard: '',
+      isImagePopupOpen: false,
+      selectedCard: null,
     }
   }
 
@@ -29,7 +30,10 @@ export default class App extends React.Component {
   }
 
   handleCardClick = (card) => {
-    this.setState({selectedCard: card});
+    this.setState({
+      isImagePopupOpen: true,
+      selectedCard: card
+    });
   }
 
   closeAllPopups = () => {
@@ -37,7 +41,8 @@ export default class App extends React.Component {
       isEditProfilePopupOpen: false,
       isAddPlacePopupOpen: false,
       isEditAvatarPopupOpen: false,
-      selectedCard: false,
+      isImagePopupOpen: false,
+      selectedCard: null,
     })
   }
 
@@ -55,7 +60,13 @@ export default class App extends React.Component {
       
       <Footer />
 
-      <PopupWithForm name="profile" title="Редактировать профиль" isOpen={this.state.isEditProfilePopupOpen} onClose={this.closeAllPopups}>
+      <PopupWithForm
+        name="profile"
+        title="Редактировать профиль"
+        isOpen={this.state.isEditProfilePopupOpen}
+        onClose={this.closeAllPopups}
+        buttonText="Сохранить"
+        >
         <form className="pop-up__form" name="user-info" noValidate>
           <label className="pop-up__field">
             <input className="pop-up__input pop-up__input_field_name" name="user-name" type="text" id="user-name" placeholder="Имя" required minLength="2" maxLength="40"/>
@@ -65,21 +76,31 @@ export default class App extends React.Component {
             <input className="pop-up__input pop-up__input_field_info" name="user-profession" type="text" id="user-profession" placeholder="Род деятельности" required minLength="2" maxLength="200"/>
             <span className="pop-up__input-error user-profession-error">!!!</span>
           </label>
-          <button className="pop-up__submit-button" type="submit" disabled>Сохранить</button>
         </form>
       </PopupWithForm>
 
-      <PopupWithForm name="avatar" title="Обновить аватар" isOpen={this.state.isEditAvatarPopupOpen} onClose={this.closeAllPopups}>
+      <PopupWithForm
+        name="avatar"
+        title="Обновить аватар"
+        isOpen={this.state.isEditAvatarPopupOpen}
+        onClose={this.closeAllPopups}
+        buttonText="Сохранить"
+        >
         <form className="pop-up__form" name="user-pic" noValidate>
           <label className="pop-up__field"> 
             <input className="pop-up__input pop-up__input_field_avatar-link" type="url" id="avatar" placeholder="Ссылка на аватар" required/>
             <span className="pop-up__input-error avatar-error">!!!</span>          
           </label>
-          <button className="pop-up__submit-button" type="submit" disabled>Сохранить</button>
         </form>
       </PopupWithForm>
 
-      <PopupWithForm name="place" title="Новое место" isOpen={this.state.isAddPlacePopupOpen} onClose={this.closeAllPopups}>
+      <PopupWithForm 
+        name="place"
+        title="Новое место"
+        isOpen={this.state.isAddPlacePopupOpen}
+        onClose={this.closeAllPopups}
+        buttonText="Сохранить"
+        >
         <form className="pop-up__form" name="place-form" noValidate>
           <label className="pop-up__field">
             <input className="pop-up__input pop-up__input_field_place-name" type="text" id="name" placeholder="Название" required minLength="2" maxLength="30"/>
@@ -89,17 +110,15 @@ export default class App extends React.Component {
             <input className="pop-up__input pop-up__input_field_place-link" type="url" id="link" placeholder="Ссылка на картинку" required/>
             <span className="pop-up__input-error link-error">!!!</span>          
           </label>
-          <button className="pop-up__submit-button" type="submit" disabled>Сохранить</button>
         </form>
       </PopupWithForm>
 
-      <PopupWithForm name="confirm" title="Вы уверены?">
+      <PopupWithForm name="confirm" title="Вы уверены?" buttonText="Да">
         <form className="pop-up__form" name="user-confirm" noValidate>
-          <button className="pop-up__submit-button" type="submit" disabled>Да</button>
         </form>
       </PopupWithForm>
 
-      <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups} />
+      <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups} isOpen={this.state.isImagePopupOpen}/>
     </>)
   }
 }
