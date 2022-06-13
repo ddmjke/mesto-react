@@ -1,6 +1,5 @@
 import React from 'react';
 import userpic from '../images/userpic.jpg';
-import Card from './Card';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 export default class Main extends React.Component {
@@ -32,6 +31,7 @@ export default class Main extends React.Component {
       </section>
 
       <section className="photo-grid">
+      {this.props.children}
       </section>
     </main>
   )}

@@ -6,6 +6,7 @@ import ImagePopup from './ImagePopup';
 import React from 'react';
 import mestoApi from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import Card from './Card';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -17,7 +18,7 @@ export default class App extends React.Component {
       isImagePopupOpen: false,
       selectedCard: null,
       currentUser: null,
-      cards: null,
+      cards: [],
     }
   }
 
@@ -28,7 +29,6 @@ export default class App extends React.Component {
           currentUser: user,
           cards: cards,
         })
-        console.log(this.state.currentUser)
       })
       .catch(err => console.log(`Failed to load initial info : ${err}`));
   }
@@ -74,8 +74,13 @@ export default class App extends React.Component {
           onEditProfile={this.handleEditProfileClick}
           onAddPlace={this.handleAddPlaceClick}
           onEditAvatar={this.handleEditAvatarClick}
-          onCardClick={this.handleCardClick}
-        />
+          onCardClick={this.handleCardClick}>
+          {
+            this.state.cards.map((card, i) => (
+              <Card card={card} key={card._id} onCardClick={this.handleCardClick} />
+            ))
+          }
+        </Main>
         
         <Footer />
 
