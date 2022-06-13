@@ -40,6 +40,7 @@ class Api {
       info['user-profession'] = res.about;
       info['user-pic'] = res.avatar;
       this._id = res._id;
+      info.id = res._id;
       return info;
     })
   }
