@@ -1,6 +1,8 @@
 import React from 'react';
 import userpic from '../images/userpic.jpg';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import Card from './Card';
+
 
 export default class Main extends React.Component {
   static contextType = CurrentUserContext;
@@ -10,8 +12,14 @@ export default class Main extends React.Component {
       userName: 'Жак-Ив Кусто',
       userDescription : 'Исследователь океана',
       userAvatar: userpic,
-      cards: [],
+      cards: this.props.cards,
     }
+  }
+  
+
+  //so the card array only renderd when user is defined
+  componentDidUpdate() {
+    if (this.state.cards.length === 0) this.setState({cards: this.props.cards})
   }
 
   render() { 
@@ -31,7 +39,11 @@ export default class Main extends React.Component {
       </section>
 
       <section className="photo-grid">
-      {this.props.children}
+      {
+        this.state.cards.map((card, i) => (
+          <Card card={card} key={card._id} onCardClick={this.props.onCardClick} />
+        ))
+      }
       </section>
     </main>
   )}
