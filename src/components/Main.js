@@ -2,6 +2,7 @@ import React from 'react';
 import userpic from '../images/userpic.jpg';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import Card from './Card';
+import mestoApi from '../utils/Api';
 
 
 export default class Main extends React.Component {
@@ -12,15 +13,18 @@ export default class Main extends React.Component {
       userName: 'Жак-Ив Кусто',
       userDescription : 'Исследователь океана',
       userAvatar: userpic,
-      cards: this.props.cards,
+      cards: [],
     }
   }
   
+componentDidMount() {
+  mestoApi.getCards()
+    .then (cards => {
+      this.setState({cards: cards});
+    })
+    .catch(err => console.log(`Failed to load initial cards : ${err}`));
+}
 
-  //so the card array only renderd when user is defined
-  componentDidUpdate() {
-    if (this.state.cards.length === 0) this.setState({cards: this.props.cards})
-  }
 
   render() { 
     return (

@@ -22,14 +22,11 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([mestoApi.getUser(), mestoApi.getCards()])
-      .then(([user, cards]) => {
-        this.setState({
-          currentUser: user,
-          cards: cards,
-        })
+    mestoApi.getUser()
+      .then(user => {
+        this.setState({currentUser: user})
       })
-      .catch(err => console.log(`Failed to load initial info : ${err}`));
+      .catch(err => console.log(`Failed to load initial user : ${err}`));
   }
 
 
