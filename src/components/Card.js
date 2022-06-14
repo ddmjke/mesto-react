@@ -6,6 +6,9 @@ export default function Card(props) {
   function handleClick() {
     props.onCardClick(props.card);
   }
+  function handleLike() {
+    props.onCardLike(props.card);
+  }
   
   const isOwn = user.id === props.card.owner._id;
   const isLiked = props.card.likes.some(like => like._id === user.id);
@@ -22,7 +25,7 @@ export default function Card(props) {
         <div className="photo-grid__likewrapper">
           {
             user &&
-            <button className={`photo-grid__like-button ${isLiked && `photo-grid__like-button_active`}`} type="button"></button>
+            <button className={`photo-grid__like-button ${isLiked && `photo-grid__like-button_active`}`} type="button" onClick={handleLike}></button>
           }
           <p className="photo-grid__likes">{props.card.likes.length}</p>
         </div>

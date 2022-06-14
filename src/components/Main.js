@@ -15,15 +15,26 @@ export default class Main extends React.Component {
       userAvatar: userpic,
       cards: [],
     }
+    this.handleLikeClick = this.handleLikeClick.bind(this);
   }
   
-componentDidMount() {
-  mestoApi.getCards()
-    .then (cards => {
-      this.setState({cards: cards});
-    })
-    .catch(err => console.log(`Failed to load initial cards : ${err}`));
-}
+  componentDidMount() {
+    mestoApi.getCards()
+      .then (cards => {
+        this.setState({cards: cards});
+      })
+      .catch(err => console.log(`Failed to load initial cards : ${err}`));
+  }
+
+  handleLikeClick(card) {
+    const isLiked = card.likes.some(like => like._id === this.context.id);
+    mestoApi.toggleLike(card._id, isLiked)
+      .then (res =>{
+        const newCards = this.state.cards.map(card => {return card._id === res._id ? res: card});
+        this.setState({cards: newCards});
+      })
+      .catch(err => console.log(`Failed to change like : ${err}`))
+  }
 
 
   render() { 
@@ -45,7 +56,12 @@ componentDidMount() {
       <section className="photo-grid">
       {
         this.state.cards.map((card, i) => (
-          <Card card={card} key={card._id} onCardClick={this.props.onCardClick} />
+          <Card 
+            card={card}
+            key={card._id}
+            onCardClick={this.props.onCardClick}
+            onCardLike={this.handleLikeClick}
+          />
         ))
       }
       </section>
