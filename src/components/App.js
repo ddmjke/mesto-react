@@ -8,6 +8,7 @@ import mestoApi from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -17,6 +18,8 @@ export default class App extends React.Component {
       isAddPlacePopupOpen: false,
       isEditAvatarPopupOpen: false,
       isImagePopupOpen: false,
+      isDeletePopupOpen: false,
+      cardToDelete: null,
       selectedCard: null,
       currentUser: null,
       cards: [],
@@ -29,6 +32,12 @@ export default class App extends React.Component {
         this.setState({currentUser: user})
       })
       .catch(err => console.log(`Failed to load initial user : ${err}`));
+    
+    mestoApi.getCards()
+    .then (cards => {
+      this.setState({cards: cards});
+    })
+    .catch(err => console.log(`Failed to load initial cards : ${err}`));
   }
 
 
@@ -51,12 +60,40 @@ export default class App extends React.Component {
     });
   }
 
+  handleLikeClick = (card) => {
+    const isLiked = card.likes.some(like => like._id === this.state.currentUser.id);
+    mestoApi.toggleLike(card._id, isLiked)
+      .then (res =>{
+        const newCards = this.state.cards.map(card => {return card._id === res._id ? res: card});
+        this.setState({cards: newCards});
+      })
+      .catch(err => console.log(`Failed to change like status : ${err}`))
+  }
+
+  handleDeleteClick = (card) => {
+    this.closeAllPopups();
+    this.setState({
+      isDeletePopupOpen: true,
+      cardToDelete: card,
+    });
+  }
+
+  handleDeleteSubmit = (evt) => {
+    evt.preventDefault();
+    this.closeAllPopups();
+    console.log(this.state.cardToDelete)
+    this.setState({
+      cardToDelete: null,
+    });
+  }
+
   closeAllPopups = () => {
     this.setState({
       isEditProfilePopupOpen: false,
       isAddPlacePopupOpen: false,
       isEditAvatarPopupOpen: false,
       isImagePopupOpen: false,
+      isDeletePopupOpen: false,
       selectedCard: null,
     })
   }
@@ -99,6 +136,8 @@ export default class App extends React.Component {
           onEditAvatar={this.handleEditAvatarClick}
           onCardClick={this.handleCardClick}
           cards={this.state.cards}
+          onCardLike={this.handleLikeClick}
+          onCardDelete={this.handleDeleteClick}
         />
         
         <Footer />
@@ -115,26 +154,22 @@ export default class App extends React.Component {
           onAvatarUpdate={this.handleAvatarUpdate}  
         />
 
-        <PopupWithForm 
-          name="place"
-          formName="place-form"
-          title="Новое место"
+        <AddPlacePopup 
           isOpen={this.state.isAddPlacePopupOpen}
           onClose={this.closeAllPopups}
-          onUserUpdate={this.handleUserUpdate}
-          buttonText="Сохранить"
-          >
-            <label className="pop-up__field">
-              <input className="pop-up__input pop-up__input_field_place-name" type="text" id="name" placeholder="Название" required minLength="2" maxLength="30"/>
-              <span className="pop-up__input-error name-error">!!!</span>          
-            </label>
-            <label className="pop-up__field"> 
-              <input className="pop-up__input pop-up__input_field_place-link" type="url" id="link" placeholder="Ссылка на картинку" required/>
-              <span className="pop-up__input-error link-error">!!!</span>          
-            </label>
-        </PopupWithForm>
+          onSubmit={this.handleAddPlaceSubmit}
+        />
 
-        <PopupWithForm name="confirm" title="Вы уверены?" buttonText="Да" formName="user-confirm">
+        <PopupWithForm 
+          name="confirm"
+          title="Вы уверены?"
+          buttonText="Да"
+          formName="user-confirm"
+          isOpen={this.state.isDeletePopupOpen}
+          onClose={this.closeAllPopups}
+          onSubmit={this.handleDeleteSubmit}
+          isChanged={true}
+        >
         </PopupWithForm>
 
         <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups} isOpen={this.state.isImagePopupOpen}/>

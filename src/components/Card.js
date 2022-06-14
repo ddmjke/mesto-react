@@ -7,6 +7,10 @@ export default function Card(props) {
   function handleClick() {
     props.onCardClick(props.card);
   }
+
+  function handleDelete() {
+    props.onCardDelete(props.card);
+  }
   
   function handleLike() {
     props.onCardLike(props.card);
@@ -20,7 +24,7 @@ export default function Card(props) {
       <img className="photo-grid__photo" src={props.card.link} alt={props.card.name} onClick={handleClick} />
       {
         user &&
-        (<button className={`photo-grid__remove-button ${isOwn && 'photo-grid__remove-button_visible'}`} type="button"></button>)
+        (<button className={`photo-grid__remove-button ${isOwn && 'photo-grid__remove-button_visible'}`} type="button" onClick={handleDelete}></button>)
       }
       <div className="photo-grid__caption">
         <h2 className="photo-grid__textbox">{props.card.name}</h2>
