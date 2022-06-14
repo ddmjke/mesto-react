@@ -7,6 +7,7 @@ import React from 'react';
 import mestoApi from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -74,6 +75,17 @@ export default class App extends React.Component {
       .catch(err => console.log(`Failed to update user info : ${err}`));
   }
 
+  handleAvatarUpdate = (link) => {
+    mestoApi.setAvatar({avatar: link})
+      .then(res => {
+        const newUser = this.state.currentUser;
+        newUser[`user-pic`] = res.avatar;
+        this.setState(newUser)
+        this.closeAllPopups();
+      })
+      .catch(err => console.log(`Failed to update avatar : ${err}`));
+  }
+
   render() {
   return (
     <>
@@ -97,19 +109,11 @@ export default class App extends React.Component {
           onUserUpdate={this.handleUserUpdate}
         />
 
-        <PopupWithForm
-          name="avatar"
-          formName="user-pic"
-          title="Обновить аватар"
+        <EditAvatarPopup
           isOpen={this.state.isEditAvatarPopupOpen}
           onClose={this.closeAllPopups}
-          buttonText="Сохранить"
-          >
-            <label className="pop-up__field"> 
-              <input className="pop-up__input pop-up__input_field_avatar-link" type="url" id="avatar" placeholder="Ссылка на аватар" required/>
-              <span className="pop-up__input-error avatar-error">!!!</span>          
-            </label>
-        </PopupWithForm>
+          onAvatarUpdate={this.handleAvatarUpdate}  
+        />
 
         <PopupWithForm 
           name="place"
