@@ -60,6 +60,20 @@ export default class App extends React.Component {
     })
   }
 
+  handleUserUpdate = (user) => {
+    mestoApi.setUser(user)
+      .then(res => {
+        this.setState({currentUser: {
+          'user-name': res.name,
+          'user-profession': res.about,
+          'user-pic': res.avatar,
+          id: res._id,
+        }})
+        this.closeAllPopups();
+      })
+      .catch(err => console.log(`Failed to update user info : ${err}`));
+  }
+
   render() {
   return (
     <>
@@ -80,31 +94,32 @@ export default class App extends React.Component {
         <EditProfilePopup
           isOpen={this.state.isEditProfilePopupOpen}
           onClose={this.closeAllPopups}
+          onUserUpdate={this.handleUserUpdate}
         />
 
         <PopupWithForm
           name="avatar"
+          formName="user-pic"
           title="Обновить аватар"
           isOpen={this.state.isEditAvatarPopupOpen}
           onClose={this.closeAllPopups}
           buttonText="Сохранить"
           >
-          <form className="pop-up__form" name="user-pic" noValidate>
             <label className="pop-up__field"> 
               <input className="pop-up__input pop-up__input_field_avatar-link" type="url" id="avatar" placeholder="Ссылка на аватар" required/>
               <span className="pop-up__input-error avatar-error">!!!</span>          
             </label>
-          </form>
         </PopupWithForm>
 
         <PopupWithForm 
           name="place"
+          formName="place-form"
           title="Новое место"
           isOpen={this.state.isAddPlacePopupOpen}
           onClose={this.closeAllPopups}
+          onUserUpdate={this.handleUserUpdate}
           buttonText="Сохранить"
           >
-          <form className="pop-up__form" name="place-form" noValidate>
             <label className="pop-up__field">
               <input className="pop-up__input pop-up__input_field_place-name" type="text" id="name" placeholder="Название" required minLength="2" maxLength="30"/>
               <span className="pop-up__input-error name-error">!!!</span>          
@@ -113,12 +128,9 @@ export default class App extends React.Component {
               <input className="pop-up__input pop-up__input_field_place-link" type="url" id="link" placeholder="Ссылка на картинку" required/>
               <span className="pop-up__input-error link-error">!!!</span>          
             </label>
-          </form>
         </PopupWithForm>
 
-        <PopupWithForm name="confirm" title="Вы уверены?" buttonText="Да">
-          <form className="pop-up__form" name="user-confirm" noValidate>
-          </form>
+        <PopupWithForm name="confirm" title="Вы уверены?" buttonText="Да" formName="user-confirm">
         </PopupWithForm>
 
         <ImagePopup card={this.state.selectedCard} onClose={this.closeAllPopups} isOpen={this.state.isImagePopupOpen}/>
