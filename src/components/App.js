@@ -6,6 +6,7 @@ import ImagePopup from './ImagePopup';
 import React from 'react';
 import mestoApi from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import EditProfilePopup from './EditProfilePopup';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -76,24 +77,10 @@ export default class App extends React.Component {
         
         <Footer />
 
-        <PopupWithForm
-          name="profile"
-          title="Редактировать профиль"
+        <EditProfilePopup
           isOpen={this.state.isEditProfilePopupOpen}
           onClose={this.closeAllPopups}
-          buttonText="Сохранить"
-          >
-          <form className="pop-up__form" name="user-info" noValidate>
-            <label className="pop-up__field">
-              <input className="pop-up__input pop-up__input_field_name" name="user-name" type="text" id="user-name" placeholder="Имя" required minLength="2" maxLength="40"/>
-              <span className="pop-up__input-error user-name-error">!!!</span>
-            </label>
-            <label className="pop-up__field">
-              <input className="pop-up__input pop-up__input_field_info" name="user-profession" type="text" id="user-profession" placeholder="Род деятельности" required minLength="2" maxLength="200"/>
-              <span className="pop-up__input-error user-profession-error">!!!</span>
-            </label>
-          </form>
-        </PopupWithForm>
+        />
 
         <PopupWithForm
           name="avatar"

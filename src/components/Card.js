@@ -3,9 +3,11 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 export default function Card(props) {
   const user = React.useContext(CurrentUserContext);
+
   function handleClick() {
     props.onCardClick(props.card);
   }
+  
   function handleLike() {
     props.onCardLike(props.card);
   }
