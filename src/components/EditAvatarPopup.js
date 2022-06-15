@@ -17,7 +17,7 @@ export default function EditAvatarPopup(props) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    props.onAvatarUpdate(avatar);
+    return props.onAvatarUpdate(avatar);
   }
 
   return (

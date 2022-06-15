@@ -15,7 +15,10 @@ export default function EditProfilePopup(props) {
     if (user) {
       setName(user[`user-name`]);
       setDescription(user[`user-profession`]);
-      setIsChanged(false);
+      setIsChanged({
+        nameChanged: false,
+        aboutChanged: false
+      });
     }
   },[user, props.isOpen])
 
@@ -38,7 +41,7 @@ export default function EditProfilePopup(props) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    props.onUserUpdate({
+    return props.onUserUpdate({
       [`user-name`]: name,
       [`user-profession`]: description,
     });

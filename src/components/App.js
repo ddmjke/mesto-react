@@ -105,7 +105,7 @@ export default class App extends React.Component {
   }
 
   handleUserUpdate = (user) => {
-    mestoApi.setUser(user)
+    return mestoApi.setUser(user)
       .then(res => {
         this.setState({currentUser: {
           'user-name': res.name,
@@ -114,29 +114,39 @@ export default class App extends React.Component {
           id: res._id,
         }})
         this.closeAllPopups();
+        return Promise.resolve(res);
       })
       .catch(err => console.log(`Failed to update user info : ${err}`));
   }
 
   handleAvatarUpdate = (link) => {
-    mestoApi.setAvatar({avatar: link})
+    return mestoApi.setAvatar({avatar: link})
       .then(res => {
         const newUser = this.state.currentUser;
         newUser[`user-pic`] = res.avatar;
         this.setState(newUser)
-        this.closeAllPopups();
       })
-      .catch(err => console.log(`Failed to update avatar : ${err}`));
+      .catch(err => {
+        console.log(`Failed to update avatar : ${err}`);
+      })
+      .finally((res) => {
+        this.closeAllPopups();
+        return Promise.resolve(res);
+      });
   }
 
   handleAddPlaceSubmit = (args) => {
-    mestoApi.setCard(args)
+    return mestoApi.setCard(args)
       .then(res => {
         this.setState({cards: [res, ...this.state.cards]});
+        return Promise.resolve(res);
       })
-      .catch(e => console.log(e))
-      .finally(() => {
+      .catch(e => {
+        console.log(e);
+      })
+      .finally((res) => {
         this.closeAllPopups();
+        return Promise.resolve(res);
       })
   }
 
