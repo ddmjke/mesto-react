@@ -27,6 +27,15 @@ export default function AddPlacePopup(props) {
     });
   }
 
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    props.onSubmit({name: name, link: link})
+      .then(() => console.log('success'))
+      .catch(e => console.log(e));
+  }
+
+
+
   return (
   <PopupWithForm 
     name="place"
@@ -34,7 +43,7 @@ export default function AddPlacePopup(props) {
     title="Новое место"
     isOpen={props.isOpen}
     onClose={props.onClose}
-    onSubmit={props.onSubmit}
+    onSubmit={handleSubmit}
     isChanged={isChanged.linkChanged && isChanged.nameChanged}
     buttonText="Сохранить"
   >
@@ -44,6 +53,7 @@ export default function AddPlacePopup(props) {
         type="text" id="name" placeholder="Название"
         required minLength="2" maxLength="30"
         onChange={handleNameInput}
+        value={name}
       />
       <span className="pop-up__input-error name-error">!!!</span>          
     </label>
@@ -53,6 +63,7 @@ export default function AddPlacePopup(props) {
         type="url" id="link" placeholder="Ссылка на картинку"
         required
         onChange={handleLinkInput}
+        value={link}
       />
       <span className="pop-up__input-error link-error">!!!</span>          
     </label>

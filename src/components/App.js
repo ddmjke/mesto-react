@@ -81,10 +81,16 @@ export default class App extends React.Component {
   handleDeleteSubmit = (evt) => {
     evt.preventDefault();
     this.closeAllPopups();
-    console.log(this.state.cardToDelete)
-    this.setState({
-      cardToDelete: null,
-    });
+    mestoApi.deleteCard(this.state.cardToDelete._id)
+      .then(() => {
+        this.setState({
+          cards: this.state.cards.filter(card => card._id !== this.state.cardToDelete._id),
+        });
+      })
+      .catch(e => console.log(e))
+      .finally(() => {
+        this.setState({cardToDelete: null})
+      })
   }
 
   closeAllPopups = () => {
@@ -121,6 +127,13 @@ export default class App extends React.Component {
         this.closeAllPopups();
       })
       .catch(err => console.log(`Failed to update avatar : ${err}`));
+  }
+
+  handleAddPlaceSubmit = (args) => {
+    mestoApi.setCard(args)
+      .then(card => {
+        this.setState([...this.state.cards, card]);
+      })
   }
 
   render() {
