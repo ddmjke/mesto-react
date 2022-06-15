@@ -80,7 +80,6 @@ export default class App extends React.Component {
 
   handleDeleteSubmit = (evt) => {
     evt.preventDefault();
-    this.closeAllPopups();
     mestoApi.deleteCard(this.state.cardToDelete._id)
       .then(() => {
         this.setState({
@@ -89,7 +88,8 @@ export default class App extends React.Component {
       })
       .catch(e => console.log(e))
       .finally(() => {
-        this.setState({cardToDelete: null})
+        this.setState({cardToDelete: null});
+        this.closeAllPopups();
       })
   }
 
@@ -131,8 +131,12 @@ export default class App extends React.Component {
 
   handleAddPlaceSubmit = (args) => {
     mestoApi.setCard(args)
-      .then(card => {
-        this.setState([...this.state.cards, card]);
+      .then(res => {
+        this.setState({cards: [res, ...this.state.cards]});
+      })
+      .catch(e => console.log(e))
+      .finally(() => {
+        this.closeAllPopups();
       })
   }
 

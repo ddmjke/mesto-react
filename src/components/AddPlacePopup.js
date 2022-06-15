@@ -9,6 +9,12 @@ export default function AddPlacePopup(props) {
     linkChanged: false
   });
 
+  React.useEffect(() => {
+      setName('');
+      setLink('');
+      setIsChanged({nameChanged: false, linkChanged: false});
+  },[props.isOpen])
+
   function handleNameInput(evt) {
     const name = evt.target.value;
     setName(name);
