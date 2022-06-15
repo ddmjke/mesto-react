@@ -8,28 +8,45 @@ export default function AddPlacePopup(props) {
     nameChanged: false,
     linkChanged: false
   });
+  const [errors, setErrors] = React.useState({
+    nameError: '',
+    linkError: ''
+  });
 
   React.useEffect(() => {
       setName('');
       setLink('');
       setIsChanged({nameChanged: false, linkChanged: false});
+      setErrors({nameError: '', linkError: ''});
   },[props.isOpen])
 
   function handleNameInput(evt) {
     const name = evt.target.value;
+    const error = evt.target.validationMessage;
+
     setName(name);
     setIsChanged({
       nameChanged: !(name === ''),
       linkChanged: isChanged.linkChanged,
     });
+    setErrors({
+      nameError: error,
+      linkError: errors.linkError
+    });
   }
 
   function handleLinkInput(evt) {
     const link = evt.target.value;
+    const error = evt.target.validationMessage;
+
     setLink(link);
     setIsChanged({
       nameChanged: isChanged.nameChanged,
       linkChanged: !(link === ''),
+    });
+    setErrors({
+      nameError: errors.nameError,
+      linkError: error
     });
   }
 
@@ -48,7 +65,7 @@ export default function AddPlacePopup(props) {
     isOpen={props.isOpen}
     onClose={props.onClose}
     onSubmit={handleSubmit}
-    isChanged={isChanged.linkChanged && isChanged.nameChanged}
+    isChanged={(isChanged.linkChanged && isChanged.nameChanged) && (errors.linkError === '' && errors.nameError === '')}
     buttonText="Сохранить"
   >
     <label className="pop-up__field">
@@ -59,7 +76,9 @@ export default function AddPlacePopup(props) {
         onChange={handleNameInput}
         value={name}
       />
-      <span className="pop-up__input-error name-error">!!!</span>          
+      <span className={`pop-up__input-error name-error ${(errors.nameError !== '')? 'pop-up__input-error_visable' : ''}`}>
+        {errors.nameError}
+      </span>          
     </label>
     <label className="pop-up__field"> 
       <input 
@@ -69,7 +88,9 @@ export default function AddPlacePopup(props) {
         onChange={handleLinkInput}
         value={link}
       />
-      <span className="pop-up__input-error link-error">!!!</span>          
+      <span className={`pop-up__input-error link-error ${(errors.linkError !== '')? 'pop-up__input-error_visable' : ''}`}>
+        {errors.linkError}
+      </span>          
     </label>
   </PopupWithForm>
   )
