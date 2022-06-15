@@ -80,16 +80,17 @@ export default class App extends React.Component {
 
   handleDeleteSubmit = (evt) => {
     evt.preventDefault();
-    mestoApi.deleteCard(this.state.cardToDelete._id)
+    return mestoApi.deleteCard(this.state.cardToDelete._id)
       .then(() => {
         this.setState({
           cards: this.state.cards.filter(card => card._id !== this.state.cardToDelete._id),
         });
-      })
-      .catch(e => console.log(e))
-      .finally(() => {
         this.setState({cardToDelete: null});
         this.closeAllPopups();
+        return Promise.resolve();
+      })
+      .catch(err => {
+        return Promise.reject(`Failed to delete card : ${err}`);
       })
   }
 
@@ -116,7 +117,9 @@ export default class App extends React.Component {
         this.closeAllPopups();
         return Promise.resolve(res);
       })
-      .catch(err => console.log(`Failed to update user info : ${err}`));
+      .catch(err => {
+        return Promise.reject(`Failed to update user info : ${err}`);
+      });
   }
 
   handleAvatarUpdate = (link) => {
@@ -124,14 +127,12 @@ export default class App extends React.Component {
       .then(res => {
         const newUser = this.state.currentUser;
         newUser[`user-pic`] = res.avatar;
-        this.setState(newUser)
-      })
-      .catch(err => {
-        console.log(`Failed to update avatar : ${err}`);
-      })
-      .finally((res) => {
+        this.setState(newUser);
         this.closeAllPopups();
         return Promise.resolve(res);
+      })
+      .catch(err => {
+        return Promise.reject(`Failed to update user avatar : ${err}`);
       });
   }
 
@@ -139,15 +140,12 @@ export default class App extends React.Component {
     return mestoApi.setCard(args)
       .then(res => {
         this.setState({cards: [res, ...this.state.cards]});
-        return Promise.resolve(res);
+          this.closeAllPopups();
+          return Promise.resolve(res);
       })
-      .catch(e => {
-        console.log(e);
-      })
-      .finally((res) => {
-        this.closeAllPopups();
-        return Promise.resolve(res);
-      })
+      .catch(err => {
+        return Promise.reject(`Failed to upload new place : ${err}`);
+      });
   }
 
   render() {
