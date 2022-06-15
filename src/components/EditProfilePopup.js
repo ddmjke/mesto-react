@@ -2,6 +2,9 @@ import PopupWithForm from './PopupWithForm';
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
+
+//to be refactored to DRY by handleInputChange(inputName, evt) or so
+
 export default function EditProfilePopup(props) {
   const user = React.useContext(CurrentUserContext);
   const [name, setName] = React.useState(user[`user-name`] || '')
@@ -10,6 +13,11 @@ export default function EditProfilePopup(props) {
     nameChanged: false,
     aboutChanged: false
   });
+  const [errors, setErrors] = React.useState({
+    nameError: '',
+    descriptionError: ''
+  });
+  
 
   React.useEffect(() => {
     if (user) {
@@ -19,23 +27,38 @@ export default function EditProfilePopup(props) {
         nameChanged: false,
         aboutChanged: false
       });
+      setErrors({
+        nameError: '',
+        descriptionError: ''
+      })
     }
   },[user, props.isOpen])
 
   function handleNameInput(evt) {
     const name = evt.target.value;
+    const error = evt.target.validationMessage;
     setName(name);
     setIsChanged({
       nameChanged: !(name === user['user-name']),
       aboutChanged: isChanged.aboutChanged,
     });
+    setErrors({
+      nameError: error,
+      descriptionError: errors.descriptionError
+    });
   }
+  
   function handleDescriptionInput(evt) {
-    const about = evt.target.value
+    const about = evt.target.value;
+    const error = evt.target.validationMessage;
     setDescription(about);
     setIsChanged({
       nameChanged: isChanged.nameChanged,
       aboutChanged: !(about === user[`user-profession`]),
+    });
+    setErrors({
+      nameError: errors.nameError,
+      descriptionError: error
     });
   }
 
@@ -56,7 +79,7 @@ export default function EditProfilePopup(props) {
       onClose={props.onClose}
       onSubmit={handleSubmit}
       buttonText="Сохранить"
-      isChanged={isChanged.nameChanged || isChanged.aboutChanged}
+      isChanged={(isChanged.nameChanged || isChanged.aboutChanged) && (errors.descriptionError === '' && errors.nameError === '')}
     >
         <label className="pop-up__field">
           <input 
@@ -68,7 +91,10 @@ export default function EditProfilePopup(props) {
             required minLength="2" maxLength="40"
             value={name}
             onChange={handleNameInput}/>
-          <span className="pop-up__input-error user-name-error">!!!</span>
+          <span 
+            className={`pop-up__input-error user-name-error ${(errors.nameError !== '')? 'pop-up__input-error_visable' : ''}`}>
+            {errors.nameError}
+          </span>
         </label>
         <label className="pop-up__field">
           <input 
@@ -81,7 +107,9 @@ export default function EditProfilePopup(props) {
             value={description}
             onChange={handleDescriptionInput}
           />
-          <span className="pop-up__input-error user-profession-error">!!!</span>
+          <span className={`pop-up__input-error user-profession-error ${(errors.desctiptionError !== '')? 'pop-up__input-error_visable' : ''}`}>
+            {errors.descriptionError}
+          </span>
         </label>
     </PopupWithForm>
   )
