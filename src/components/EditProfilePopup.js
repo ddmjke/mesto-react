@@ -3,7 +3,7 @@ import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 
-//to be refactored to DRY by handleInputChange(inputName, evt) or so
+//to be refactored to DRY by handleInputChange(inputName, evt) or smth
 
 export default function EditProfilePopup(props) {
   const user = React.useContext(CurrentUserContext);
@@ -47,7 +47,7 @@ export default function EditProfilePopup(props) {
       descriptionError: errors.descriptionError
     });
   }
-  
+
   function handleDescriptionInput(evt) {
     const about = evt.target.value;
     const error = evt.target.validationMessage;
